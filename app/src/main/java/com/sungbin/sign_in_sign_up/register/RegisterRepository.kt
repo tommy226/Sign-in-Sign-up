@@ -1,8 +1,7 @@
 package com.sungbin.sign_in_sign_up.register
 
-import com.sungbin.mypet.data.LoginRequest
-import com.sungbin.mypet.network.RetrofitClient
 import com.sungbin.sign_in_sign_up.data.RegisterRequest
+import com.sungbin.sign_in_sign_up.network.RetrofitClient
 
 class RegisterRepository {
     private val api = RetrofitClient.create()

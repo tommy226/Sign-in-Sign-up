@@ -178,7 +178,8 @@
                             android:text="회원 가입"
                             android:background="@drawable/black_border_fade"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_20" />
+                            android:textSize="@dimen/text_20"
+                            android:onClick="@{()->vm.registerRequest()}"/>
 
                         <Button
                             android:id="@+id/cancel_btn"

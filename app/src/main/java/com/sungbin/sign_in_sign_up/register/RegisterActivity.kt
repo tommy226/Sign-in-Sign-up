@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.sungbin.mypet.login.LoginViewModel
 import com.sungbin.sign_in_sign_up.R
 import com.sungbin.sign_in_sign_up.databinding.ActivityLoginBinding
 import com.sungbin.sign_in_sign_up.databinding.ActivityRegisterBinding
@@ -39,6 +38,13 @@ class RegisterActivity : AppCompatActivity() {
 
         viewmmodel.cancelflag.observe(this, Observer {
             if(it) finish()
+        })
+
+        viewmmodel.registerError.observe(this, Observer { error ->
+            if(error){
+                Toast.makeText(this, "조건에 맞지 않습니다 다시 확인 해주세요", Toast.LENGTH_SHORT).show()
+                viewmmodel.registerErrorDone()
+            }
         })
 
     }

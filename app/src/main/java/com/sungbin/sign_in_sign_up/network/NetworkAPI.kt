@@ -1,7 +1,7 @@
-package com.sungbin.mypet.network
+package com.sungbin.sign_in_sign_up.network
 
-import com.sungbin.mypet.data.LoginRequest
-import com.sungbin.mypet.data.LoginResponse
+import com.sungbin.sign_in_sign_up.data.LoginRequest
+import com.sungbin.sign_in_sign_up.data.LoginResponse
 import com.sungbin.sign_in_sign_up.data.RegisterRequest
 import com.sungbin.sign_in_sign_up.data.RegisterResponse
 import retrofit2.Call

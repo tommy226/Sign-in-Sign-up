@@ -6,9 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.sungbin.mypet.login.LoginViewModel
 import com.sungbin.sign_in_sign_up.MainActivity
+import com.sungbin.sign_in_sign_up.R
 import com.sungbin.sign_in_sign_up.databinding.ActivityLoginBinding
 import com.sungbin.sign_in_sign_up.register.RegisterActivity
 
@@ -17,13 +18,15 @@ class LoginActivity : AppCompatActivity() {
 
     private val viewmmodel: LoginViewModel by viewModels()
 
-    private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+    private lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-        initBtnListener()
-
+        binding.run {
+            vm = viewmmodel
+            lifecycleOwner = this@LoginActivity
+        }
         viewmmodel.loginResult.observe(this, Observer { result ->
             Log.d(TAG, "LOGIN RESULT : ${result}")
 
@@ -33,17 +36,20 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(intent)
             } else Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
         })
-    }
 
-    private fun initBtnListener() {
-        binding.run {
-            loginBtn.setOnClickListener {
-                viewmmodel.loginRequest(accountEdit.text.toString(), passwordEdit.text.toString())
+        viewmmodel.inputError.observe(this, Observer { result ->
+            if (result) {
+                Toast.makeText(this, "모두 입력 해주세요", Toast.LENGTH_SHORT).show()
+                viewmmodel.inputErrorDone()
             }
-            registerBtn.setOnClickListener {
+        })
+
+        viewmmodel.registerFlag.observe(this, Observer { result ->
+            if(result){
                 val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
                 startActivity(intent)
+                viewmmodel.registerFlagDone()
             }
-        }
+        })
     }
 }

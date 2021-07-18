@@ -1,106 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".login.LoginActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+       <variable
+           name="vm"
+           type="com.sungbin.sign_in_sign_up.login.LoginViewModel" />
 
+    </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".login.LoginActivity">
 
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/teabackground">
-
-        </FrameLayout>
+            android:layout_height="match_parent">
 
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/teabackground">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha=".4"
-            android:background="@drawable/background_fade">
-
-        </FrameLayout>
+            </FrameLayout>
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha=".4"
+                android:background="@drawable/background_fade">
 
-            <LinearLayout
+            </FrameLayout>
+
+
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_left_16"
-                android:layout_marginRight="@dimen/margin_right_16"
-                android:layout_marginTop="@dimen/margin_top_16"
-                android:layout_marginBottom="@dimen/margin_bottom_16"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/account_edit"
-                    style="@style/Font_family_light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_style"
-                    android:drawableLeft="@drawable/ic_person"
-                    android:drawablePadding="@dimen/padding_16"
-                    android:hint="이메일"
-                    android:layout_marginTop="@dimen/margin_top_8"
-                    android:layout_marginBottom="@dimen/margin_top_8"
-                    android:layout_marginLeft="@dimen/margin_right_16"
-                    android:layout_marginRight="@dimen/margin_right_16"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:maxLines="1"
-                    android:padding="@dimen/padding_16"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:textSize="@dimen/text_20" />
-
-
-                <EditText
-                    android:id="@+id/password_edit"
-                    style="@style/Font_family_light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/password"
-                    android:drawablePadding="@dimen/padding_16"
-                    android:background="@drawable/edit_style"
-                    android:hint="비밀번호"
-                    android:layout_marginTop="@dimen/margin_top_8"
-                    android:layout_marginBottom="@dimen/margin_top_8"
-                    android:layout_marginLeft="@dimen/margin_right_16"
-                    android:layout_marginRight="@dimen/margin_right_16"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:padding="@dimen/padding_16"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:textSize="@dimen/text_20" />
-
-
-                <Button
-                    android:id="@+id/login_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_top_8"
-                    android:layout_marginBottom="@dimen/margin_top_8"
-                    android:layout_marginLeft="@dimen/margin_right_16"
-                    android:layout_marginRight="@dimen/margin_right_16"
-                    android:text="로그인"
-                    android:background="@drawable/black_border_fade"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_20" />
-
+                android:layout_centerInParent="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -109,31 +50,100 @@
                     android:layout_marginRight="@dimen/margin_right_16"
                     android:layout_marginTop="@dimen/margin_top_16"
                     android:layout_marginBottom="@dimen/margin_bottom_16"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/register_btn"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                    <EditText
+                        android:id="@+id/account_edit"
+                        style="@style/Font_family_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_style"
+                        android:drawableLeft="@drawable/ic_person"
+                        android:drawablePadding="@dimen/padding_16"
+                        android:hint="이메일"
+                        android:layout_marginTop="@dimen/margin_top_8"
+                        android:layout_marginBottom="@dimen/margin_top_8"
+                        android:layout_marginLeft="@dimen/margin_right_16"
+                        android:layout_marginRight="@dimen/margin_right_16"
+                        android:inputType="text"
+                        android:maxLength="30"
+                        android:maxLines="1"
+                        android:padding="@dimen/padding_16"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="@dimen/text_20"
+                        android:text="@={vm._inputAccount}"/>
+
+
+                    <EditText
+                        android:id="@+id/password_edit"
+                        style="@style/Font_family_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/password"
+                        android:drawablePadding="@dimen/padding_16"
+                        android:background="@drawable/edit_style"
+                        android:hint="비밀번호"
+                        android:layout_marginTop="@dimen/margin_top_8"
+                        android:layout_marginBottom="@dimen/margin_top_8"
+                        android:layout_marginLeft="@dimen/margin_right_16"
+                        android:layout_marginRight="@dimen/margin_right_16"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:padding="@dimen/padding_16"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="@dimen/text_20"
+                        android:text="@={vm._inputPW}"/>
+
+
+                    <Button
+                        android:id="@+id/login_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_right_16"
+                        android:layout_marginTop="@dimen/margin_top_8"
+                        android:layout_marginRight="@dimen/margin_right_16"
+                        android:layout_marginBottom="@dimen/margin_top_8"
+                        android:background="@drawable/black_border_fade"
+                        android:onClick="@{()->vm.loginRequest()}"
+                        android:text="로그인"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_20" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_16"
                         android:layout_marginRight="@dimen/margin_right_16"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_20"
-                        android:paddingTop="@dimen/padding_16"
-                        android:paddingBottom="@dimen/padding_16"
-                        android:layout_marginBottom="@dimen/margin_bottom_8"
-                        android:gravity="center"
-                        android:text="Create Account" />
+                        android:layout_marginTop="@dimen/margin_top_16"
+                        android:layout_marginBottom="@dimen/margin_bottom_16"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/register_btn"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_16"
+                            android:layout_marginRight="@dimen/margin_right_16"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_20"
+                            android:paddingTop="@dimen/padding_16"
+                            android:paddingBottom="@dimen/padding_16"
+                            android:layout_marginBottom="@dimen/margin_bottom_8"
+                            android:gravity="center"
+                            android:text="Create Account"
+                            android:onClick="@{()->vm.callRegister()}"/>
 
 
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </ScrollView>
 
-        </ScrollView>
+        </RelativeLayout>
 
-    </RelativeLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

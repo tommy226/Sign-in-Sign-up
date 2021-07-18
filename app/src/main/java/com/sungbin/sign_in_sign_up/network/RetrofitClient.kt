@@ -1,4 +1,4 @@
-package com.sungbin.mypet.network
+package com.sungbin.sign_in_sign_up.network
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
