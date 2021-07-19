@@ -37,13 +37,6 @@ class LoginActivity : AppCompatActivity() {
             } else Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
         })
 
-        viewmmodel.inputError.observe(this, Observer { result ->
-            if (result) {
-                Toast.makeText(this, "모두 입력 해주세요", Toast.LENGTH_SHORT).show()
-                viewmmodel.inputErrorDone()
-            }
-        })
-
         viewmmodel.registerFlag.observe(this, Observer { result ->
             if(result){
                 val intent = Intent(this@LoginActivity, RegisterActivity::class.java)

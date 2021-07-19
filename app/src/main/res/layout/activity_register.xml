@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="vm"
             type="com.sungbin.sign_in_sign_up.register.RegisterViewModel" />
@@ -25,7 +25,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/teabackground">
+                android:background="@drawable/blue_backgorund">
 
             </FrameLayout>
 
@@ -65,7 +65,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/edit_style"
-                            android:drawableLeft="@drawable/ic_person"
+                            android:drawableLeft="@drawable/ic_email"
                             android:drawablePadding="@dimen/padding_16"
                             android:hint="아이디 (이메일)"
                             android:layout_marginTop="@dimen/margin_top_8"
@@ -99,54 +99,83 @@
 
                     </LinearLayout>
 
-                    <EditText
-                        android:id="@+id/pw_edit"
-                        style="@style/Font_family_light"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/password"
-                        android:drawablePadding="@dimen/padding_16"
-                        android:background="@drawable/edit_style"
-                        android:hint="비밀번호"
-                        android:layout_marginTop="@dimen/margin_top_8"
-                        android:layout_marginBottom="@dimen/margin_top_8"
-                        android:layout_marginLeft="@dimen/margin_right_16"
-                        android:layout_marginRight="@dimen/margin_right_16"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:padding="@dimen/padding_16"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white"
-                        android:textSize="@dimen/text_20"
-                        android:text="@={vm._inputPW}"/>
+                        android:orientation="horizontal">
+                        <EditText
+                            android:id="@+id/pw_edit"
+                            style="@style/Font_family_light"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/password"
+                            android:drawablePadding="@dimen/padding_16"
+                            android:background="@drawable/edit_style"
+                            android:hint="비밀번호"
+                            android:layout_marginTop="@dimen/margin_top_8"
+                            android:layout_marginBottom="@dimen/margin_top_8"
+                            android:layout_marginLeft="@dimen/margin_right_16"
+                            android:layout_marginRight="@dimen/margin_right_16"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:padding="@dimen/padding_16"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white"
+                            android:textSize="@dimen/text_20"
+                            android:text="@={vm._inputPW}"/>
 
-                    <EditText
-                        android:id="@+id/pw_check_edit"
-                        style="@style/Font_family_light"
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/baseline_done_24"
+                            android:visibility="@{vm.isPasswordAbled()? View.VISIBLE : View.GONE}"
+                            android:layout_gravity="center"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/password"
-                        android:drawablePadding="@dimen/padding_16"
-                        android:background="@drawable/edit_style"
-                        android:hint="비밀번호 확인"
-                        android:layout_marginTop="@dimen/margin_top_8"
-                        android:layout_marginBottom="@dimen/margin_top_8"
-                        android:layout_marginLeft="@dimen/margin_right_16"
-                        android:layout_marginRight="@dimen/margin_right_16"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:padding="@dimen/padding_16"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white"
-                        android:textSize="@dimen/text_20"
-                        android:text="@={vm._inputPWcheck}"/>
+                        android:orientation="horizontal">
+                        <EditText
+                            android:id="@+id/pw_check_edit"
+                            style="@style/Font_family_light"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/password"
+                            android:drawablePadding="@dimen/padding_16"
+                            android:background="@drawable/edit_style"
+                            android:hint="비밀번호 확인"
+                            android:layout_marginTop="@dimen/margin_top_8"
+                            android:layout_marginBottom="@dimen/margin_top_8"
+                            android:layout_marginLeft="@dimen/margin_right_16"
+                            android:layout_marginRight="@dimen/margin_right_16"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:padding="@dimen/padding_16"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white"
+                            android:textSize="@dimen/text_20"
+                            android:text="@={vm._inputPWcheck}"/>
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/baseline_done_24"
+                            android:visibility="@{vm.isPasswordAbled()? View.VISIBLE : View.GONE}"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/name_edit"
                         style="@style/Font_family_light"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/password"
+                        android:drawableLeft="@drawable/ic_person"
                         android:drawablePadding="@dimen/padding_16"
                         android:background="@drawable/edit_style"
                         android:hint="이름"

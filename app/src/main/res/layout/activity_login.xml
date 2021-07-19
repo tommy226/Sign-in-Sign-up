@@ -24,7 +24,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/teabackground">
+                android:background="@drawable/blue_backgorund">
 
             </FrameLayout>
 
@@ -58,9 +58,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_style"
-                        android:drawableLeft="@drawable/ic_person"
+                        android:drawableLeft="@drawable/ic_email"
                         android:drawablePadding="@dimen/padding_16"
-                        android:hint="이메일"
+                        android:hint="아이디 (이메일)"
                         android:layout_marginTop="@dimen/margin_top_8"
                         android:layout_marginBottom="@dimen/margin_top_8"
                         android:layout_marginLeft="@dimen/margin_right_16"
@@ -109,7 +109,8 @@
                         android:onClick="@{()->vm.loginRequest()}"
                         android:text="로그인"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_20" />
+                        android:textSize="@dimen/text_20"
+                        android:enabled="@{vm.isEndalbedLogin()}"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"

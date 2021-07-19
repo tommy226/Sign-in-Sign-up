@@ -1,8 +1,7 @@
 package com.sungbin.sign_in_sign_up.register
 
-import android.util.Log
-import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sungbin.sign_in_sign_up.data.RegisterResponse
@@ -37,9 +36,9 @@ class RegisterViewModel : ViewModel(){
     private val _cancelflag = MutableLiveData<Boolean>()
     val cancelflag: LiveData<Boolean>
         get() = _cancelflag
-    fun cancel() = _cancelflag.postValue(true)
+    fun cancel() = _cancelflag.postValue(true)   // 회원가입 취소 버튼
 
-    fun accountDuplicated() {
+    fun accountDuplicated() {                                                   // 아이디 중복 확인
         val response = inputAccount.value?.let { repo.accountDupCheck(it) }
         response?.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -53,13 +52,13 @@ class RegisterViewModel : ViewModel(){
         })
     }
 
-    private val _registerError = MutableLiveData<Boolean>()
+    private val _registerError = MutableLiveData<Boolean>()             // 클라이언트 입장에서 회원가입 요청 조건이 모두 맞는지 확인
     val registerError: LiveData<Boolean>
         get() = _registerError
     fun registerErrorDone() = _registerError.postValue(false)
 
-    fun registerRequest(){
-        if(nullcheck() && pwcheck() && accountcheck.value!!){
+    fun registerRequest(){          // 회원가입 요청
+        if (blankCheck() && isPasswordAbled.value == true && accountcheck.value == true) {
             val response = repo.register(inputAccount.value!!, inputPW.value!!, inputName.value!!)
             response.enqueue(object : Callback<RegisterResponse> {
                 override fun onResponse(
@@ -75,16 +74,20 @@ class RegisterViewModel : ViewModel(){
 
                 }
             })
-        }else{
+        } else {
             _registerError.postValue(true)
         }
     }
+    private fun blankCheck() = !(inputAccount.value.isNullOrBlank()     // 회원가입 EditText Null 여부
+            || inputPW.value.isNullOrEmpty()
+            || inputPWcheck.value.isNullOrEmpty()
+            || inputName.value.isNullOrBlank())
 
-    fun nullcheck(): Boolean{
-        return !(inputAccount.value == null || inputPW.value == null || inputPWcheck.value == null || inputName.value == null)
+    private val _isPasswordAbled = MediatorLiveData<Boolean>().apply { // 비밀번호 동일한지 확인
+        addSource(inputPW){ value = pwCheck() }
+        addSource(inputPWcheck){ value = pwCheck() }
     }
-
-    fun pwcheck(): Boolean{
-        return inputPW.value!!.equals(inputPWcheck.value!!)
-    }
+    val isPasswordAbled: LiveData<Boolean>
+        get() = _isPasswordAbled
+    private fun pwCheck() = inputPW.value.equals(inputPWcheck.value)
 }
