@@ -72,7 +72,7 @@
                         android:textColor="@color/white"
                         android:textColorHint="@color/white"
                         android:textSize="@dimen/text_20"
-                        android:text="@={vm._inputAccount}"/>
+                        android:text="@={vm.inputAccount}"/>
 
 
                     <EditText
@@ -94,7 +94,7 @@
                         android:textColor="@color/white"
                         android:textColorHint="@color/white"
                         android:textSize="@dimen/text_20"
-                        android:text="@={vm._inputPW}"/>
+                        android:text="@={vm.inputPW}"/>
 
 
                     <Button
@@ -106,7 +106,7 @@
                         android:layout_marginRight="@dimen/margin_right_16"
                         android:layout_marginBottom="@dimen/margin_top_8"
                         android:background="@drawable/black_border_fade"
-                        android:onClick="@{()->vm.loginRequest()}"
+                        android:onClick="@{()->vm.loginRequest(vm.inputAccount, vm.inputPW)}"
                         android:text="로그인"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_20"

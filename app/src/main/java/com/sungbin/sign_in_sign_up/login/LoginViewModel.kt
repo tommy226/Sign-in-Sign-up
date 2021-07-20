@@ -1,10 +1,9 @@
 package com.sungbin.sign_in_sign_up.login
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sungbin.sign_in_sign_up.data.LoginResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,13 +12,8 @@ class LoginViewModel: ViewModel() {
     private val TAG = LoginViewModel::class.java.simpleName
     private val repo = LoginRepository()
 
-    val _inputAccount = MutableLiveData<String>()
-    val inputAccount: LiveData<String>
-        get() = _inputAccount
-
-    val _inputPW = MutableLiveData<String>()
-    val inputPW: LiveData<String>
-        get() = _inputPW
+    val inputAccount = MutableLiveData<String>("")
+    val inputPW = MutableLiveData<String>("")
 
     private val _registerFlag = MutableLiveData<Boolean>()
     val registerFlag: LiveData<Boolean>
@@ -30,8 +24,9 @@ class LoginViewModel: ViewModel() {
     val loginResult: LiveData<Boolean>
         get() = _loginResult
 
-    fun loginRequest() {                                                        // 로그인 요청
-        val response = repo.login(inputAccount.value!!, inputPW.value!!)
+    fun loginRequest(account: String, password: String)                                                     // 로그인 요청
+            = viewModelScope.launch(Dispatchers.IO) {
+        val response = repo.login(account, password)
         response.enqueue(object : Callback<LoginResponse> {
             override fun onResponse(
                 call: Call<LoginResponse>,

@@ -6,7 +6,7 @@ import com.sungbin.sign_in_sign_up.network.RetrofitClient
 class RegisterRepository {
     private val api = RetrofitClient.create()
 
-    fun accountDupCheck(account: String) = api.accountDup(account)
+    suspend fun accountDupCheck(account: String) = api.accountDup(account)
 
-    fun register(account: String, password: String, name: String) = api.register(RegisterRequest(account, password, name))
+    suspend fun register(account: String, password: String, name: String) = api.register(RegisterRequest(account, password, name))
 }
