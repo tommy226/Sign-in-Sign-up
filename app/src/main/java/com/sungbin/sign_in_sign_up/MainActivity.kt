@@ -14,10 +14,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val account = MyApplication.prefs.getString("account","")
-        val password = MyApplication.prefs.getString("password","")
-        Log.d("MAIN", "USER INFO : $account and $password" )
-
         binding.logoutBtn.setOnClickListener {
             MyApplication.prefs.remove()
             val intent = Intent(this, LoginActivity::class.java)

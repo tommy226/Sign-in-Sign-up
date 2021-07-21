@@ -1,19 +1,16 @@
 package com.sungbin.sign_in_sign_up.network
 
-import com.sungbin.sign_in_sign_up.data.LoginRequest
-import com.sungbin.sign_in_sign_up.data.LoginResponse
-import com.sungbin.sign_in_sign_up.data.RegisterRequest
-import com.sungbin.sign_in_sign_up.data.RegisterResponse
+import com.sungbin.sign_in_sign_up.data.*
 import retrofit2.Call
 import retrofit2.http.*
 
 interface NetworkAPI {
-    @POST("api/auth/login")
-    suspend fun login(@Body userinfo: LoginRequest): Call<LoginResponse>
+    @PUT("auth/") // login
+    fun login(@Body userinfo: LoginRequest): Call<LoginResponse>
 
-    @GET("api/auth/account/{id}")
-    suspend fun accountDup(@Path("id") account: String): Call<String>
+    @POST("auth/authority")
+    fun accountDup(@Body account: String): Call<AccountCheckResponse>
 
-    @POST("api/auth/register")
-    suspend fun register(@Body registerinfo: RegisterRequest): Call<RegisterResponse>
+    @POST("auth/") // sign
+    fun register(@Body registerinfo: RegisterRequest): Call<RegisterResponse>
 }

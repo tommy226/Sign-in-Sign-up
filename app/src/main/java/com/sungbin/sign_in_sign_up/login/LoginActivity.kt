@@ -31,10 +31,15 @@ class LoginActivity : AppCompatActivity() {
 
         if(!MyApplication.prefs.getString("account", "").isNullOrBlank()                    // 저장된 아이디가 있을 시 자동 로그인
             || !MyApplication.prefs.getString("password","").isNullOrBlank()){
-            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            val account = MyApplication.prefs.getString("account","")
+            val password = MyApplication.prefs.getString("password","")
+            viewmmodel.loginRequest(account, password)
         }
+        viewmmodel.tokenModel.observe(this, Observer { tokenModel ->
+            Log.d(TAG, tokenModel.toString())                                                           // 서버에서 전달 받은 Token
+            MyApplication.prefs.setString("access", tokenModel.accessToken)
+            MyApplication.prefs.setString("refresh", tokenModel.refreshToken)
+        })
 
         viewmmodel.loginResult.observe(this, Observer { result ->
             Log.d(TAG, "LOGIN RESULT : ${result}")

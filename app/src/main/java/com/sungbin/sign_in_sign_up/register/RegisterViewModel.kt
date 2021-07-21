@@ -1,7 +1,10 @@
 package com.sungbin.sign_in_sign_up.register
 
+import android.util.Log
 import androidx.lifecycle.*
+import com.sungbin.sign_in_sign_up.data.AccountCheckResponse
 import com.sungbin.sign_in_sign_up.data.RegisterResponse
+import com.sungbin.sign_in_sign_up.utils.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -17,9 +20,11 @@ class RegisterViewModel : ViewModel(){
     val inputPWcheck = MutableLiveData<String>()
     val inputName = MutableLiveData<String>()
 
-    private val _accountcheck = MutableLiveData<Boolean>()
-    val accountcheck: LiveData<Boolean>
-        get() = _accountcheck
+    private var isAccountAbled: Boolean? = false
+
+    private val _toast = MutableLiveData<Event<String>>()
+    val toast: LiveData<Event<String>>
+        get() = _toast
 
     private val _cancelflag = MutableLiveData<Boolean>()
     val cancelflag: LiveData<Boolean>
@@ -28,28 +33,42 @@ class RegisterViewModel : ViewModel(){
 
     fun accountDuplicated() =
         viewModelScope.launch(Dispatchers.IO) {                                        // 아이디 중복 확인
-            val response = inputAccount.value?.let { repo.accountDupCheck(it) }
-            response?.enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    if (response.code() == 200) _accountcheck.postValue(true)
-                    else _accountcheck.postValue(false)
-                }
+            val pattern = android.util.Patterns.EMAIL_ADDRESS
+            val emailpattern = inputAccount.value?.let { pattern.matcher(it).matches() }
+            if (emailpattern == true) {
+                val response = inputAccount.value?.let { repo.accountDupCheck(it) }
+                response?.enqueue(object : Callback<AccountCheckResponse> {
+                    override fun onResponse(
+                        call: Call<AccountCheckResponse>,
+                        response: Response<AccountCheckResponse>
+                    ) {
+                        Log.d(TAG, "RESPONSE CODE : ${response.code()}")
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    _accountcheck.postValue(false)
-                }
-            })
+                        if (response.code() == 200) {
+                            isAccountAbled = true
+                            _toast.postValue(Event("사용 가능한 아이디 입니다."))
+                        }
+                        else if(response.code() == 202){
+                            isAccountAbled = false
+                            _toast.postValue(Event("중복 된 아이디 입니다."))
+                        }
+                        else {
+                            isAccountAbled = false
+                            _toast.postValue(Event("사용 불가능한 아이디 입니다."))
+                        }
+                    }
+
+                    override fun onFailure(call: Call<AccountCheckResponse>, t: Throwable) {
+
+                    }
+                })
+            } else {
+                _toast.postValue(Event("이메일 형식이 아닙니다."))
+            }
         }
 
-
-    private val _registerError = MutableLiveData<Boolean>()             // 클라이언트 입장에서 회원가입 요청 조건이 모두 맞는지 확인
-    val registerError: LiveData<Boolean>
-        get() = _registerError
-    fun registerErrorDone() = _registerError.postValue(false)
-
     fun registerRequest(account: String, password: String, name: String) = viewModelScope.launch(Dispatchers.IO) {      // 회원가입 요청
-            if (blankCheck() && isPasswordAbled.value == true && accountcheck.value == true) {
-
+            if (blankCheck() && isPasswordAbled.value == true && isAccountAbled == true) {
                 val response = repo.register(account, password, name)
                 response.enqueue(object : Callback<RegisterResponse> {
                     override fun onResponse(
@@ -66,7 +85,7 @@ class RegisterViewModel : ViewModel(){
                     }
                 })
             } else {
-                _registerError.postValue(true)
+                _toast.value = Event("조건에 맞지 않습니다 다시 확인 해주세요")    // 클라이언트 입장에서 회원가입 요청 조건이 모두 맞는지 확인
             }
         }
 

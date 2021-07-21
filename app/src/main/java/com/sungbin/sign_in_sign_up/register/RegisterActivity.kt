@@ -16,6 +16,7 @@ import com.sungbin.sign_in_sign_up.MainActivity
 import com.sungbin.sign_in_sign_up.R
 import com.sungbin.sign_in_sign_up.databinding.ActivityLoginBinding
 import com.sungbin.sign_in_sign_up.databinding.ActivityRegisterBinding
+import com.sungbin.sign_in_sign_up.utils.EventObserver
 
 class RegisterActivity : AppCompatActivity() {
     private val TAG = RegisterActivity::class.java.simpleName
@@ -30,25 +31,16 @@ class RegisterActivity : AppCompatActivity() {
             vm = viewmmodel
             lifecycleOwner = this@RegisterActivity
         }
-        viewmmodel.accountcheck.observe(this, Observer {
-            if(it) Toast.makeText(this, "사용 가능 한 아이디 입니다.", Toast.LENGTH_SHORT).show()
-            else Toast.makeText(this, "사용 불가능 한 아이디 입니다.", Toast.LENGTH_SHORT).show()
+        viewmmodel.toast.observe(this, EventObserver { message ->
+           Toast.makeText(this@RegisterActivity, message, Toast.LENGTH_SHORT).show()
         })
 
         viewmmodel.isPasswordAbled.observe(this, Observer {  pwCheck ->
-            if(pwCheck) Log.d(TAG, "패스워드 사용 가능")
-            else Log.d(TAG, "패스워드 사용 불가")
+            if(pwCheck) Log.d(TAG, "패스워드 사용 가능") else Log.d(TAG, "패스워드 사용 불가")
         })
 
         viewmmodel.cancelflag.observe(this, Observer {
             if(it) finish()
-        })
-
-        viewmmodel.registerError.observe(this, Observer { error ->
-            if(error){
-                Toast.makeText(this, "조건에 맞지 않습니다 다시 확인 해주세요", Toast.LENGTH_SHORT).show()
-                viewmmodel.registerErrorDone()
-            }
         })
     }
 }
