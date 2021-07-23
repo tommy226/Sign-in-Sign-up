@@ -13,7 +13,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitClient {
     companion object{
         private val gson = GsonBuilder().setLenient().create()
-        private const val BASE_URL = "http://192.168.1.29:8082/"
+//        private const val BASE_URL = "http://192.168.1.29:8082/"
+private const val BASE_URL = "https://vlaos-smartwork.com/api/"
 
         fun create(): NetworkAPI{
             val httpLoggingInterceptor = HttpLoggingInterceptor()
@@ -29,15 +30,15 @@ class RetrofitClient {
                 return@Interceptor it.proceed(request)
             }
 
-//            val client = OkHttpClient.Builder()
-//                .addInterceptor(headerInterceptor)
-//                .addInterceptor(httpLoggingInterceptor)
-//                .build()
-
-            val client = SSLFactory().unsafeOkHttpClient        // SSL 인증서 에러 시 사용 (http 로컬 통신)
-                .addInterceptor(httpLoggingInterceptor)
+            val client = OkHttpClient.Builder()
                 .addInterceptor(headerInterceptor)
+                .addInterceptor(httpLoggingInterceptor)
                 .build()
+//
+//            val client = SSLFactory().unsafeOkHttpClient        // SSL 인증서 에러 시 사용 (http 로컬 통신)
+//                .addInterceptor(httpLoggingInterceptor)
+//                .addInterceptor(headerInterceptor)
+//                .build()
 
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)

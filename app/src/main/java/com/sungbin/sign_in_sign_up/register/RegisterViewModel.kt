@@ -5,7 +5,10 @@ import androidx.lifecycle.*
 import com.sungbin.sign_in_sign_up.data.AccountCheckResponse
 import com.sungbin.sign_in_sign_up.data.RegisterResponse
 import com.sungbin.sign_in_sign_up.utils.Event
+import com.sungbin.sign_in_sign_up.utils.customEnqueue
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,6 +17,13 @@ import retrofit2.Response
 class RegisterViewModel : ViewModel(){
     private val TAG = RegisterViewModel::class.java.simpleName
     private val repo = RegisterRepository()
+
+    private val job = Job()
+    private val viewModelScope = CoroutineScope(Dispatchers.Main + job)
+
+    private val _isRegister = MutableLiveData<Boolean>(false)
+    val isRegister: LiveData<Boolean>
+        get() = _isRegister
 
     val inputAccount = MutableLiveData<String>()
     val inputPW = MutableLiveData<String>()
@@ -26,66 +36,58 @@ class RegisterViewModel : ViewModel(){
     val toast: LiveData<Event<String>>
         get() = _toast
 
-    private val _cancelflag = MutableLiveData<Boolean>()
-    val cancelflag: LiveData<Boolean>
-        get() = _cancelflag
-    fun cancel() = _cancelflag.postValue(true)   // 회원가입 취소 버튼
+    private val _isCancel = MutableLiveData<Boolean>()
+    val isCancel: LiveData<Boolean>
+        get() = _isCancel
+    fun cancel() = _isCancel.postValue(true)   // 회원가입 취소 버튼
 
     fun accountDuplicated() =
-        viewModelScope.launch(Dispatchers.IO) {                                        // 아이디 중복 확인
+        viewModelScope.launch {                                        // 아이디 중복 확인
             val pattern = android.util.Patterns.EMAIL_ADDRESS
             val emailpattern = inputAccount.value?.let { pattern.matcher(it).matches() }
             if (emailpattern == true) {
                 val response = inputAccount.value?.let { repo.accountDupCheck(it) }
-                response?.enqueue(object : Callback<AccountCheckResponse> {
-                    override fun onResponse(
-                        call: Call<AccountCheckResponse>,
-                        response: Response<AccountCheckResponse>
-                    ) {
-                        Log.d(TAG, "RESPONSE CODE : ${response.code()}")
-
-                        if (response.code() == 200) {
-                            isAccountAbled = true
-                            _toast.postValue(Event("사용 가능한 아이디 입니다."))
-                        }
-                        else if(response.code() == 202){
-                            isAccountAbled = false
-                            _toast.postValue(Event("중복 된 아이디 입니다."))
-                        }
-                        else {
-                            isAccountAbled = false
-                            _toast.postValue(Event("사용 불가능한 아이디 입니다."))
+                response?.customEnqueue(
+                    onSuccess = {
+                        isAccountAbled = true
+                        _toast.value = Event("사용 가능한 아이디 입니다.")
+                    },
+                    onError = {
+                        when {
+                            it.code() == 409 -> {
+                                isAccountAbled = false
+                                _toast.value = Event("중복 된 아이디 입니다.")
+                            }
+                            else -> {
+                                _toast.value = Event("${it.code()}")
+                            }
                         }
                     }
-
-                    override fun onFailure(call: Call<AccountCheckResponse>, t: Throwable) {
-
-                    }
-                })
-            } else {
-                _toast.postValue(Event("이메일 형식이 아닙니다."))
-            }
+                )
+            } else _toast.value = Event("이메일 형식이 아닙니다.")
         }
 
-    fun registerRequest(account: String, password: String, name: String) = viewModelScope.launch(Dispatchers.IO) {      // 회원가입 요청
+    fun registerRequest(account: String, password: String, name: String) =
+        viewModelScope.launch {      // 회원가입 요청
             if (blankCheck() && isPasswordAbled.value == true && isAccountAbled == true) {
                 val response = repo.register(account, password, name)
-                response.enqueue(object : Callback<RegisterResponse> {
-                    override fun onResponse(
-                        call: Call<RegisterResponse>,
-                        response: Response<RegisterResponse>
-                    ) {
-                        if (response.code() == 200) {
-                            // 회원가입 완료 시 처리
-                        }
+                response.customEnqueue(
+                    onSuccess = {
+                        _toast.value = Event("회원 가입이 완료 되었습니다.")
+                        _isRegister.value = true
+                    },
+                    onError = {
+                        _toast.value = Event("회원 가입이 거절 되었습니다.")
+                        _isRegister.value = false
+                    },
+                    onFailure = {
+                        _toast.value = Event("Server error")
+                        _isRegister.value = false
                     }
-
-                    override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-
-                    }
-                })
+                )
             } else {
                 _toast.value = Event("조건에 맞지 않습니다 다시 확인 해주세요")    // 클라이언트 입장에서 회원가입 요청 조건이 모두 맞는지 확인
+                _isRegister.value = false
             }
         }
 
@@ -101,4 +103,9 @@ class RegisterViewModel : ViewModel(){
     val isPasswordAbled: LiveData<Boolean>
         get() = _isPasswordAbled
     private fun pwCheck() = inputPW.value.equals(inputPWcheck.value)
+
+    override fun onCleared() {
+        super.onCleared()
+        job.cancel()
+    }
 }

@@ -13,6 +13,7 @@ import com.sungbin.sign_in_sign_up.MyApplication
 import com.sungbin.sign_in_sign_up.R
 import com.sungbin.sign_in_sign_up.databinding.ActivityLoginBinding
 import com.sungbin.sign_in_sign_up.register.RegisterActivity
+import com.sungbin.sign_in_sign_up.utils.showToast
 
 class LoginActivity : AppCompatActivity() {
     private val TAG = LoginActivity::class.java.simpleName
@@ -28,13 +29,8 @@ class LoginActivity : AppCompatActivity() {
             vm = viewmmodel
             lifecycleOwner = this@LoginActivity
         }
+        autoLogin()
 
-        if(!MyApplication.prefs.getString("account", "").isNullOrBlank()                    // 저장된 아이디가 있을 시 자동 로그인
-            || !MyApplication.prefs.getString("password","").isNullOrBlank()){
-            val account = MyApplication.prefs.getString("account","")
-            val password = MyApplication.prefs.getString("password","")
-            viewmmodel.loginRequest(account, password)
-        }
         viewmmodel.tokenModel.observe(this, Observer { tokenModel ->
             Log.d(TAG, tokenModel.toString())                                                           // 서버에서 전달 받은 Token
             MyApplication.prefs.setString("access", tokenModel.accessToken)
@@ -45,12 +41,13 @@ class LoginActivity : AppCompatActivity() {
             Log.d(TAG, "LOGIN RESULT : ${result}")
 
             if (result) {
-                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+                showToast("로그인 성공")
                 MyApplication.prefs.setString("account", viewmmodel.inputAccount.value!!)           // 로그인 성공 시 자동로그인 아이디 등록
                 MyApplication.prefs.setString("password", viewmmodel.inputPW.value!!)
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 startActivity(intent)
-            } else Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
+                finish()
+            } else showToast("로그인 실패")
         })
 
         viewmmodel.registerFlag.observe(this, Observer { result ->                                // 회원가입
@@ -60,5 +57,19 @@ class LoginActivity : AppCompatActivity() {
                 viewmmodel.registerFlagDone()
             }
         })
+    }
+
+    fun autoLogin() {
+        if(!MyApplication.prefs.getString("account", "").isNullOrBlank()                    // 저장된 아이디가 있을 시 자동 로그인
+            || !MyApplication.prefs.getString("password","").isNullOrBlank()){
+            val account = MyApplication.prefs.getString("account","")
+            val password = MyApplication.prefs.getString("password","")
+            viewmmodel.loginRequest(account, password)
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        autoLogin()
     }
 }

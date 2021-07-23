@@ -98,7 +98,6 @@
                           />
 
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -133,6 +132,30 @@
                             android:visibility="@{vm.isPasswordAbled()? View.VISIBLE : View.GONE}"
                             android:layout_gravity="center"/>
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/password_error_text"
+                        style="@style/P6_12pt_Regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="형식이 올바르지 않습니다."
+                        android:textColor="#E61610"
+                        android:layout_marginLeft="@dimen/margin_left_16"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@+id/password_edt"
+                        app:layout_constraintTop_toBottomOf="@+id/password_edt" />
+
+                    <TextView
+                        android:id="@+id/password_right_text"
+                        style="@style/P6_12pt_Regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="형식이 올바릅니다."
+                        android:textColor="#0AF421"
+                        android:layout_marginLeft="@dimen/margin_left_16"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@+id/password_edt"
+                        app:layout_constraintTop_toBottomOf="@+id/password_edt" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -169,7 +192,6 @@
                             android:layout_gravity="center"/>
 
                     </LinearLayout>
-
                     <EditText
                         android:id="@+id/name_edit"
                         style="@style/Font_family_light"
