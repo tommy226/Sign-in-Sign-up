@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SigninSignup">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".register.RegisterActivity"></activity>
         <activity android:name=".login.LoginActivity">
             <intent-filter>
