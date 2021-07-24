@@ -38,32 +38,33 @@ class LoginActivity : AppCompatActivity() {
         })
 
         viewmmodel.loginResult.observe(this, Observer { result ->
-            Log.d(TAG, "LOGIN RESULT : ${result}")
-
             if (result) {
                 showToast("로그인 성공")
-                MyApplication.prefs.setString("account", viewmmodel.inputAccount.value!!)           // 로그인 성공 시 자동로그인 아이디 등록
-                MyApplication.prefs.setString("password", viewmmodel.inputPW.value!!)
+                if (!viewmmodel.inputAccount.value.isNullOrEmpty()) {
+                    MyApplication.prefs.setString("account", viewmmodel.inputAccount.value!!)      // 로그인 성공 시 자동로그인 아이디 등록
+                    MyApplication.prefs.setString("password", viewmmodel.inputPW.value!!)
+                }
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             } else showToast("로그인 실패")
         })
 
-        viewmmodel.registerFlag.observe(this, Observer { result ->                                // 회원가입
-            if(result){
-                val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-                startActivity(intent)
-                viewmmodel.registerFlagDone()
-            }
+        viewmmodel.registerFlag.observe(
+            this,
+            Observer { result ->                                // 회원가입
+                if (result) {
+                    val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+                    startActivity(intent)
+                    viewmmodel.registerFlagDone()
+                }
         })
     }
 
     fun autoLogin() {
-        if(!MyApplication.prefs.getString("account", "").isNullOrBlank()                    // 저장된 아이디가 있을 시 자동 로그인
-            || !MyApplication.prefs.getString("password","").isNullOrBlank()){
-            val account = MyApplication.prefs.getString("account","")
-            val password = MyApplication.prefs.getString("password","")
+        if (MyApplication.prefs.getString("account", "").isNotEmpty()) {
+            val account = MyApplication.prefs.getString("account", "")
+            val password = MyApplication.prefs.getString("password", "")
             viewmmodel.loginRequest(account, password)
         }
     }
